@@ -1,0 +1,16 @@
+# Ignore dữ liệu lớn
+*.csv
+*.zip
+*.gz
+
+# Ignore folder rác của Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignore folder cấu hình của IDE
+.ipynb_checkpoints/
+.virtualenv/
+venv/
+env/
+.env
