@@ -72,7 +72,7 @@ We compare the performance of the Baseline Model ($K=5$) and the Optimized Model
 ## How to Run
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/PhcPh4m/Bank-Loan-Default-Prediction.git](https://github.com/your-username/Bank-Loan-Default-Prediction.git)
+   git clone [https://github.com/PhcPh4m/Bank-Loan-Default-Prediction.git](https://github.com/PhcPh4m/Bank-Loan-Default-Prediction.git)
 2. Install dependencies: 
    ```bash
    pip install -r requirements.txt
