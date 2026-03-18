@@ -13,12 +13,12 @@ The dataset used is a subset of the **LendingClub Loan Data** from Kaggle.
 * **Big Data Optimization:** Due to RAM limits, I implemented **Linux `!head` command** and **Pandas Chunking** to efficiently process the data. 
 * **Reproducibility:** A sampled version (`data/loan_data_sample.csv`) is provided for users to run the notebook immediately without downloading the full 1.5GB dataset.
 
-## 🛠️ Technical Stack
+## Technical Stack
 * **Language:** Python
 * **Libraries:** `Pandas`, `NumPy`, `Matplotlib`, `Seaborn`, `Scikit-learn`.
 * **Tools:** Google Colab, Linux Command Line.
 
-## ⚙️ Key Features & Workflow
+## Key Features & Workflow
 ### 1. Exploratory Data Analysis (EDA)
 * Analyzed the distribution of `loan_status` to identify class imbalance.
 * Visualized correlations between features like `annual_inc`, `loan_amnt`, and `int_rate`.
