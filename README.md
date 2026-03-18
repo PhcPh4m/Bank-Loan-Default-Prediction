@@ -1,44 +1,41 @@
-# Bank-Loan-Default-Prediction
-Predicting bank loan defaults using the LendingClub dataset. Features comprehensive EDA, data preprocessing, and K-Nearest Neighbors (KNN) classification with hyperparameter tuning.
+# Bank Loan Default Prediction
+Predicting bank loan defaults using the LendingClub dataset. Features comprehensive EDA, big data preprocessing, and K-Nearest Neighbors (KNN) classification with hyperparameter tuning.
+
 ---
 
 ## Project Overview
 The goal of this project is to build a machine learning model that can predict whether a borrower will pay back their loan in full or "Charge Off" (default). By identifying high-risk borrowers, financial institutions can minimize financial losses and optimize their lending strategies.
 
-## Data Source
+## Data Source & Big Data Handling
 The dataset used is a subset of the **LendingClub Loan Data** from Kaggle.
 * **Original Source:** [LendingClub Dataset on Kaggle](https://www.kaggle.com/datasets/wordsforthewise/lending-club)
-* **Size:** 390,000+ records.
-* **Primary Dataset:** `accepted_2007_to_2018Q4.csv` (Used for model training and testing).
-  **Secondary Dataset:** `rejected_2007_to_2018Q4.csv` (Contains data on rejected loan applications).
-* **Target Variable:** `loan_status` (Fully Paid vs. Charged Off).
-
-> **Note:** Due to the large file size (>100MB), the raw dataset is not stored in this repository. Please download it from the link above and place it in the `data/` folder for local execution.
+* **Dataset Size:** 2.2 million+ records (~1.55GB CSV file).
+* **Big Data Optimization:** Due to hardware constraints (RAM limits), I implemented **Linux `!head` command** and **Pandas Chunking** to efficiently sample and process the data without crashing the environment.
 
 ## Technical Stack
 * **Language:** Python
-* **Environment:** Google Colab / Jupyter Notebook
 * **Libraries:** `Pandas`, `NumPy`, `Matplotlib`, `Seaborn`, `Scikit-learn`.
+* **Tools:** Google Colab, Linux Command Line.
 
 ## Key Features & Workflow
-1.  **Exploratory Data Analysis (EDA):** * Visualizing the distribution of loan status.
-    * Analyzing correlations between features (Income, Loan Amount, DTI, etc.).
-    * Handling missing values and identifying outliers.
-2.  **Data Preprocessing:**
-    * Feature Engineering (converting categorical strings to numeric).
-    * Scaling features using `StandardScaler`.
-    * Handling imbalanced data.
-3.  **Modeling:**
-    * Implementing **K-Nearest Neighbors (KNN)**.
-    * Fine-tuning hyperparameters (k-value, distance metrics) using `GridSearchCV`.
-4.  **Evaluation:**
-    * Assessing performance using Confusion Matrix, Precision, Recall, and F1-score.
+### 1. Exploratory Data Analysis (EDA)
+* Analyzed the distribution of `loan_status` to identify class imbalance.
+* Visualized correlations between features like `annual_inc`, `loan_amnt`, and `int_rate`.
+
+### 2. Advanced Data Preprocessing
+* **Outlier Removal:** Used the **Interquartile Range (IQR)** method to filter extreme values in income and debt-to-income (DTI) ratios, ensuring the KNN model isn't skewed.
+* **Feature Engineering:** * Converted `term` (e.g., "36 months") into numeric format.
+    * Encoded categorical `grade` (A-G) into ordinal numeric values.
+* **Scaling:** Applied **StandardScaler** to normalize features, which is mandatory for distance-based algorithms like KNN.
+
+### 3. Modeling & Hyperparameter Tuning
+* Implemented **K-Nearest Neighbors (KNN)**.
+* Performed **Hyperparameter Tuning** using the **Elbow Method** (testing K from 1 to 20) to find the optimal balance between bias and variance.
 
 ## Results
-*(Updating as the project progresses...)*
-- Found optimal `k` value for the KNN model.
-- Achieved an accuracy of X% and F1-score of Y%.
-
+* **Optimal K-Value:** **17** (found via Error Rate visualization).
+* **Final Accuracy:** **82%** (Improved from 79% after tuning).
+* **Conclusion:** The model performs exceptionally well at identifying "Fully Paid" loans (High Recall). The results reflect real-world credit risk challenges where data is naturally imbalanced.
 ## How to Run
 1. Clone the repository:
    ```bash
