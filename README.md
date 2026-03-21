@@ -86,7 +86,14 @@ The model identified **Interest Rate (55.8%)** and **Credit Grade (35.3%)** as t
 
 ## How to Run
 1. Open the **Spark Notebook** in Google Colab.
-2. Provide your `kaggle.json` to download the dataset.
+2. Execute the Pipeline
+   1. Open the **Spark Notebook** in Google Colab using the badge at the top.
+   2. **Kaggle Authentication:** When prompted by the notebook, simply enter your:
+       * **Kaggle Username**
+       * **Kaggle API Key**
+    3. **Environment Setup:** The notebook will automatically install Java 8, Spark, and Hadoop, then configure the HDFS environment.
+    4. **Data Ingestion:** The code will download the 1.55GB dataset from Kaggle and move it to **HDFS** (`/user/{current_user}/data/loan_data.csv`).
+    5. **Run All:** Execute all cells to witness the **80.11% accuracy** on over 1.3M rows.
 3. Run all cells to initialize HDFS, Spark, and execute the pipeline.
 
 ---
