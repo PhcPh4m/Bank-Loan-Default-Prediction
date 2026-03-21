@@ -1,16 +1,29 @@
-# Ignore dữ liệu lớn
+# Data Files (Ignore large datasets)
 *.csv
 *.zip
 *.gz
+*.json
 
-# Ignore folder rác của Python
+# Kaggle Configuration (Security)
+.kaggle/
+kaggle.json
+
+# Python Bytecode & Cache
 __pycache__/
 *.py[cod]
 *$py.class
 
-# Ignore folder cấu hình của IDE
+# IDE & Environment Settings
 .ipynb_checkpoints/
 .virtualenv/
 venv/
 env/
 .env
+.vscode/
+.idea/
+
+# Spark & Hadoop Metadata/Logs
+derby.log
+metastore_db/
+spark-warehouse/
+checkpoint/
