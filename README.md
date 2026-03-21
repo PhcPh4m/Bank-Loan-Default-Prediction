@@ -1,81 +1,93 @@
-# Bank Loan Default Prediction
-Predicting bank loan defaults using the LendingClub dataset. Features comprehensive EDA, big data preprocessing, and K-Nearest Neighbors (KNN) classification with hyperparameter tuning.
+# Bank Loan Default Prediction (Big Data Edition)
+
+Predicting bank loan defaults using the LendingClub dataset. This project evolved from a local-scale **KNN model** to a **Scalable Big Data Pipeline** using **Apache Spark** and **HDFS**, handling over 2.2 million records.
 
 ---
 
-## Project Overview
-The goal of this project is to build a machine learning model that can predict whether a borrower will pay back their loan in full or "Charge Off" (default). By identifying high-risk borrowers, financial institutions can minimize financial losses and optimize their lending strategies.
+## Project Evolution: From Local to Big Data
+Initially, this project started with a KNN model using Pandas on a small sample. However, to process the full **1.55GB dataset** without memory failures, the architecture was upgraded to a distributed system:
+* **Storage:** Hadoop Distributed File System (HDFS) for reliable storage.
+* **Processing Engine:** Apache Spark (PySpark) for parallelized data transformation.
+* **Model:** Random Forest Classifier (Optimized for large-scale financial data).
 
-## Data Source & Big Data Handling
-The dataset used is a subset of the **LendingClub Loan Data** from Kaggle.
-* **Original Source:** [LendingClub Dataset on Kaggle](https://www.kaggle.com/datasets/wordsforthewise/lending-club)
-* **Dataset Size:** 2.2 million+ records (~1.55GB CSV file).
-* **Big Data Optimization:** Due to RAM limits, I implemented **Linux `!head` command** and **Pandas Chunking** to efficiently process the data. 
-* **Reproducibility:** A sampled version (`data/loan_data_sample.csv`) is provided for users to run the notebook immediately without downloading the full 1.5GB dataset.
+## Dataset & Infrastructure
+* **Source:** [LendingClub Dataset on Kaggle](https://www.kaggle.com/datasets/wordsforthewise/lending-club)
+* **Raw Scale:** 2,260,668 records (~1.55GB CSV file).
+* **Infrastructure:** * **HDFS:** Managed distributed data ingestion.
+    * **PySpark:** Parallelized the training process across the entire cluster.
+* **Processed Scale:** After cleaning and filtering for completed loans, the dataset contains **1,344,709 records**.
+    * **Training Set:** 1,076,484 rows (80%)
+    * **Test Set:** 268,225 rows (20%)
 
 ## Technical Stack
-* **Language:** Python
-* **Libraries:** `Pandas`, `NumPy`, `Matplotlib`, `Seaborn`, `Scikit-learn`.
-* **Tools:** Google Colab, Linux Command Line.
+* **Big Data:** Apache Spark 3.1.2, Hadoop 3.2.
+* **Machine Learning:** `pyspark.ml` (VectorAssembler, RandomForestClassifier, StringIndexer).
+* **Visualization:** `Seaborn`, `Matplotlib`.
+* **Environment:** Google Colab with Java 8 & HDFS configured.
 
-## Key Features & Workflow
-### 1. Exploratory Data Analysis (EDA)
-* Analyzed the distribution of `loan_status` to identify class imbalance.
-* Visualized correlations between features like `annual_inc`, `loan_amnt`, and `int_rate`.
+## Key Insights & Visualizations (EDA)
+Using Spark to process the entire dataset,  identified critical patterns that were previously limited in the KNN version:
 
-### 2. Advanced Data Preprocessing
-* **Outlier Removal:** Used the **Interquartile Range (IQR)** method to filter extreme values in income and debt-to-income (DTI) ratios.
-* **Feature Engineering:** * Converted `term` (e.g., "36 months") into numeric format.
-    * Encoded categorical `grade` (A-G) into ordinal numeric values.
-* **Scaling:** Applied **StandardScaler** to normalize features, which is crucial for distance-based algorithms like KNN.
+### 1. The Scalability Gap (KNN vs. Spark)
+* **KNN Limitation:** The original KNN model could only handle a **tiny sample of 8,344 rows**.
+* **Spark Advantage:** Spark allowed us to scale to **1.34 Million records** (a **160x increase**), capturing the full variance of the data.
 
-### 3. Modeling & Hyperparameter Tuning
-* Implemented **K-Nearest Neighbors (KNN)**.
-* Performed **Hyperparameter Tuning** using the **Elbow Method** (testing K from 1 to 20).
-* **Optimization:** Improved accuracy from a baseline of **79% (K=5)** to **82% (K=17)**.
+### 2. Class Distribution & Correlations
+I analyzed the 80/20 imbalance between "Fully Paid" and "Charged Off" status. Spark's correlation matrix helped identify the most predictive features.
 
 <p align="center">
-  <img src="images/elbow_method.png" width="500" title="Elbow Method Chart">
+  <img src="images/loan_status_dist.png" width="400" title="Loan Status Distribution">
+  <img src="images/correlation_heatmap.png" width="450" title="Correlation Heatmap">
 </p>
+
+### 3. Feature Analysis: Interest Rate
+Interest rate proved to be a primary "red flag". "Charged Off" loans typically carry significantly higher interest rates compared to "Fully Paid" ones.
+
 <p align="center">
-  <em>(Elbow Method Chart: Identifying K=17 as the optimal balance between bias and variance.)</em>
+  <img src="images/interest_rate_boxplot.png" width="500" title="Interest Rate Boxplot">
 </p>
+
+---
+
+## Model Performance: Spark Random Forest
+I transitioned from  **KNN** to **Random Forest** for better stability on imbalanced big data.
+
+### **Final Metrics:**
+* **Accuracy:** **80.11%** * **AUC (Area Under ROC):** **0.6833**
+
+### **Feature Importance:**
+The model identified **Interest Rate (55.8%)** and **Credit Grade (35.3%)** as the top predictors.
+
+<p align="center">
+  <img src="images/model_metrics.png" width="450" title="Model Performance Metrics">
+  <img src="images/feature_importance.png" width="450" title="Feature Importance Analysis">
+</p>
+
+---
+
+## Model Comparison: KNN vs. Spark Random Forest
+
+| Feature | Legacy KNN Model | Spark Random Forest (Final) |
+| :--- | :--- | :--- |
+| **Data Volume** | Sampled (**8,344 rows**) | **Full Dataset (1,344,709 rows)** |
+| **Infrastructure** | Local CPU / Pandas | **Hadoop HDFS & Apache Spark** |
+|**Complexity** | $O(n^2)$ - Not scalable | $O(Trees \times n \log n)$ - **Distributed** |
+| **Accuracy** | 82.00% (Small sample) | **80.11% (Full 1.5GB Data)** |
+| **Scalability** | Low (Memory limited) | **High (Production-ready)** |
+
+---
 
 ## Repository Structure
-* `data/`: Contains the sampled dataset for demo (`loan_data_sample.csv`).
-* `models/`: Contains trained `knn_model.pkl` and `scaler.pkl`.
-* `notebook/`: Comprehensive Python Notebook with step-by-step explanations.
-* `images/`: Visualization charts (Elbow Method, Confusion Matrices, etc.).
-* `requirements.txt`: List of required Python libraries.
+* `notebook/`: 
+    * `Bank_Loan_Classification_Large_Scale_System.ipynb` (Final Spark Pipeline).
+    * `Legacy_KNN_Model.ipynb` (Initial approach on 8k rows).
+* `images/`: Visualization charts for EDA and Model Evaluation.
+* `README.md`: Project documentation.
 
-## Results & Model Evolution
-
-### Confusion Matrix Comparison
-We compare the performance of the Baseline Model ($K=5$) and the Optimized Model ($K=17$) after finding the optimal K-value using the Elbow Method.
-
-<p align="center">
-  <img src="images/confusion_matrix_k5.png" width="400" title="Baseline Confusion Matrix (K=5)">
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="images/confusion_matrix_k17.png" width="400" title="Optimized Confusion Matrix (K=17)">
-</p>
-<p align="center">
-  <em>(Left: Baseline $K=5$, Right: Optimized $K=17$)</em>
-</p>
-<p align="center">
-  <em>Final Accuracy: 82% (Optimized K=17)</em>
-</p>
-
-### Key Insights from Comparison:
-* **Accuracy Improvement:** Overall accuracy increased by **3%** (from 79% to **82%**).
-* **Reduction of False Defaults:** The $K=17$ model significantly reduced the number of false default predictions (False Negatives), making it more reliable for financial institutions.
-* **Balanced Performance:** Finding the optimal K balanced the bias-variance trade-off, leading to a more stable model.
 ## How to Run
-1. Clone the repository:
-   ```bash
-   git clone [https://github.com/PhcPh4m/Bank-Loan-Default-Prediction.git](https://github.com/PhcPh4m/Bank-Loan-Default-Prediction.git)
-2. Install dependencies: 
-   ```bash
-   pip install -r requirements.txt
-3. Run the notebook in notebooks or upload it to Google Colab.
-   
-   
+1. Open the **Spark Notebook** in Google Colab.
+2. Provide your `kaggle.json` to download the dataset.
+3. Run all cells to initialize HDFS, Spark, and execute the pipeline.
+
+---
+**Author:** Phuc Pham  
