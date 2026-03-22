@@ -85,16 +85,16 @@ The model identified **Interest Rate (55.8%)** and **Credit Grade (35.3%)** as t
 * `README.md`: Project documentation.
 
 ## How to Run
-1. Open the **Spark Notebook** in Google Colab.
-2. Execute the Pipeline
-   1. Open the **Spark Notebook** in Google Colab using the badge at the top.
-   2. **Kaggle Authentication:** When prompted by the notebook, simply enter your:
-       * **Kaggle Username**
-       * **Kaggle API Key**
-    3. **Environment Setup:** The notebook will automatically install Java 8, Spark, and Hadoop, then configure the HDFS environment.
-    4. **Data Ingestion:** The code will download the 1.55GB dataset from Kaggle and move it to **HDFS** (`/user/{current_user}/data/loan_data.csv`).
-    5. **Run All:** Execute all cells to witness the **80.11% accuracy** on over 1.3M rows.
-3. Run all cells to initialize HDFS, Spark, and execute the pipeline.
-
+1. Navigate to Notebooks: Go to the notebook/ folder in this repository.
+2. Open the Core Pipeline: Click on Bank_Loan_Classification_Large_Scale_System.ipynb.
+3. Launch in Colab: Click the "Open in Colab" .
+4. Execute the Pipeline
+       * Go to the menu Runtime > Run all (or press Ctrl + F9).
+       * No Kaggle API Required: The system automatically fetches the 1.55GB dataset from a secure public mirror to bypass authentication hurdles.
+5. Automated Workflow:
+   * Environment Setup: The notebook silently installs Java 8, Spark 3.1.2, and Hadoop, then configures a virtual HDFS environment.
+   * Data Ingestion: The 2.2M raw records are downloaded and ingested into HDFS at /user/Bank-Loan-Default-Prediction/data/loan_data.csv.
+   * Distributed Processing: PySpark parallelizes the cleaning and training process across the virtual cluster.
+6. Final Result: After ~10-15 minutes (depending on Colab's network speed), you will witness an 80.11% accuracy model trained on over 1.34M cleaned rows.
 ---
 **Author:** Phuc Pham  
